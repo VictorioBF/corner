@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 class PostsController extends Controller
 {
     //C
-    public function insert(Request $form)
+    public function new(Request $form)
     {
         $post = new Post();
 
