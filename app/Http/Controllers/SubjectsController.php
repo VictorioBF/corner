@@ -10,7 +10,7 @@ class SubjectsController extends Controller
     //C
     public function create()
     {
-        return view('subjects.create');
+        return view('app');
     }
 
     public function insert(Request $form)
@@ -28,12 +28,12 @@ class SubjectsController extends Controller
     {
         $subjects = Subject::orderBy('id', 'desc')->get();
 
-        return view('subjects.index', ['subjects' => $subjects]);
+        return view('app', ['subjects' => $subjects]);
     }
     //U
     public function edit(Subject $subject)
     {
-        return view('subjects.edit', ['subject' => $subject]);
+        return view('app', ['subject' => $subject]);
     }
 
     public function update(Request $form, Subject $subject)

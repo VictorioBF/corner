@@ -28,12 +28,12 @@ class PostsController extends Controller
     {
         $posts = Post::orderBy('id', 'desc')->get();
 
-        return view('home', ['posts' => $posts]);
+        return view('app', ['posts' => $posts]);
     }
 
     public function show(Post $post)
     {
-        return view('posts.show', ['post' => $post]);
+        return view('app', ['post' => $post]);
     }
     
     //U - no updating on posts

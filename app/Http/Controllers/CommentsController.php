@@ -28,12 +28,12 @@ class CommentsController extends Controller
     {
         $comments = Comment::orderBy('id', 'desc')->get();
 
-        return view('comments.index', ['comments' => $comments]);
+        return view('app', ['comments' => $comments]);
     }
 
     public function show(Comment $comment)
     {
-        return view('comments.show', ['comment' => $comment]);
+        return view('app', ['comment' => $comment]);
     }
 
     //U - no updating on commentaries
