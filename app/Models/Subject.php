@@ -9,5 +9,10 @@ class Subject extends Model
 {
     use HasFactory;
     
+    public function posts()
+    {
+        return $this->hasMany(Post::class, foreignKey: "user_id", localKey: "id");
+    }
+
     public $timestamps = false;
 }

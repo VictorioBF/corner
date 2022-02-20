@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 
 class SubjectsController extends Controller
 {
-    //C
-    public function create()
+    //Create
+    public function CView()
     {
         return view('subjects.create');
     }
 
-    public function insert(Request $form)
+    public function CAction(Request $form)
     {
         $subject = new Subject();
 
@@ -23,14 +23,14 @@ class SubjectsController extends Controller
 
         return redirect()->route('subjects.index');
     }
-    //R
+    //Read
     public function index()
     {
         $subjects = Subject::orderBy('id', 'desc')->get();
 
         return view('subjects.index', ['subjects' => $subjects]);
     }
-    //U
+    //Update
     public function edit(Subject $subject)
     {
         return view('subjects.edit', ['subject' => $subject]);
@@ -44,5 +44,5 @@ class SubjectsController extends Controller
 
         return redirect()->route('subjects');
     }
-    //D - never delete
+    //Delete - never delete
 }

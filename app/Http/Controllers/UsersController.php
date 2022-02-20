@@ -3,19 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
-    //C
-    public function create()
+    //Create
+    public function register()
     {
-        return view('users.create');
+        return view('users.register');
     }
 
-    public function insert(Request $form)
+    public function new(Request $form)
     {
         $user = new User();
 
@@ -25,34 +26,60 @@ class UsersController extends Controller
         $user->password = Hash::make($form->password);
 
         $user->save();
+        event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect()->route('home');
+        return redirect()->route('posts.home');
     }
 
-    //R
-    public function profile(User $user)
+    //Read
+    public function RView(User $user)
     {
-        return view('users.profile', ['user' => $user]);
+        $posts = $user->posts()->get();
+
+        return view('users.show', ['page' => 'profile', 'user' => $user, 'posts' => $posts]);
     }
 
-    //U
-    public function update(Request $form, User $user)
+    //Update
+    public function UView(User $user)
     {
-        $user->name = $form->name;
-
-        $user->save();
-
-        return redirect()->route('users');
+        return view('users.edit', ['page' => 'profile', 'user' => $user]);
     }
-    
-    //D
-    public function delete(User $user)
-    {
-        $user->delete();
 
-        return redirect()->route('users');
+    public function UAction(Request $form, User $user)
+    {
+        if (Hash::check($form->password, Auth::user()->password)) {
+
+            $user->name = $form->name;
+            $user->email = $form->email;
+
+            $user->save();
+
+            return redirect()->route('users.profile', Auth::user()->id)->with('msg', 'sucesso na alteração.');
+        } else {
+            return redirect()->route('users.profile', Auth::user()->id)->with('msg', 'sua senha está incorreta.');
+        }
+    }
+
+    //Delete
+    public function DAction(Request $form, User $user)
+    {
+        if (Hash::check($form->password, Auth::user()->password)) {
+
+            $posts = $user->posts();
+
+            foreach ($posts as $post) {
+                $post->delete();
+            }
+
+            $user->delete();
+
+            return redirect()->route('users.register');
+        } else {
+            return redirect()->route('users.profile', Auth::user()->id)->with('msg', 'sua senha está incorreta.');
+        }
+
     }
 
     // login/logout
@@ -64,41 +91,41 @@ class UsersController extends Controller
                 'username' => ['required'],
                 'password' => ['required'],
             ]);
-            
-            // remenber token
+
+            // remember token
             if ($form->remember != null) {
                 if (Auth::attempt($credentials, true)) {
                     // login success
                     session()->regenerate();
-                    return redirect()->route('home');
+                    return redirect()->route('posts.home');
                 } else {
                     // login error
-                    return redirect()->route('login')->with(
+                    return redirect()->route('users.login')->with(
                         'erro',
                         'Usuário ou senha inválidos.'
                     );
                 }
-            }else{
+            } else {
                 if (Auth::attempt($credentials)) {
                     // login success
                     session()->regenerate();
-                    return redirect()->route('home');
+                    return redirect()->route('posts.home');
                 } else {
                     // login error
-                    return redirect()->route('login')->with(
+                    return redirect()->route('users.login')->with(
                         'erro',
                         'Usuário ou senha inválidos.'
                     );
                 }
             }
         }
-        
-        return view('usuarios.login');
+
+        return view('users.login');
     }
-    
+
     public function logout()
     {
         Auth::logout();
-        return redirect()->route('home');
+        return redirect()->route('users.login');
     }
 }

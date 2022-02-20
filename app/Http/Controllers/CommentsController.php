@@ -3,46 +3,41 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CommentsController extends Controller
 {
-    //C
-    public function insert(Request $form, $url)
+    //Create
+    public function CView()
+    {
+        return view('comments.create');
+    }
+    public function CAction(Request $form)
     {
         $comment = new Comment();
 
-        
         $comment->user_id = Auth::user()->id;
-        $comment->post_id = $form->occult;
+        $comment->post_id = $form->post_id;
         $comment->content = $form->content;
 
         $comment->save();
 
-        return redirect()->route('home');
+        return redirect()->back();
     }
 
-    //R
-    public function index()
+    //Update - no updating on commentaries
+
+    //Delete
+    public function DView()
     {
-        $comments = Comment::orderBy('id', 'desc')->get();
-
-        return view('comments.index', ['comments' => $comments]);
+        return view('comments.delete');
     }
-
-    public function show(Comment $comment)
-    {
-        return view('comments.show', ['comment' => $comment]);
-    }
-
-    //U - no updating on commentaries
-
-    //D
-    public function delete(Comment $comment)
+    public function DAction(Comment $comment)
     {
         $comment->delete();
 
-        return redirect()->route('comments');
+        return redirect()->route('post');
     }
 }
