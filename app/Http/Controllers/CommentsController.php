@@ -38,6 +38,6 @@ class CommentsController extends Controller
     {
         $comment->delete();
 
-        return redirect()->route('post');
+        return redirect()->back();
     }
 }

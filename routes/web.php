@@ -33,7 +33,7 @@ Route::post('/comment/new', [CommentsController::class, 'CAction'])->middleware(
 // R
 Route::get('comment/', [CommentsController::class, 'index'])->middleware('auth')->name('comments.get');
 // D
-Route::delete('/comment/delete/{comment}', [CommentsController::class, 'delete'])->middleware('auth')->name('comments.delete');
+Route::delete('/comment/delete/{comment}', [CommentsController::class, 'DAction'])->middleware('auth')->name('comments.delete');
 
 // =#=#=#=#=#= SUBJECTS =#=#=#=#=#=
 // C

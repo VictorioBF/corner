@@ -1,6 +1,6 @@
 @extends('templates.base')
 @section('content')
-{{-- modal comentário --}}
+{{-- modal novo comentário --}}
 <div class="modal" tabindex="-1" id="addComment">
   <form method="post" action="{{ route('comments.new') }}">
     @csrf
@@ -28,17 +28,37 @@
 <div class="card" style="width: 80%; margin: auto">
   <div class="card-body">
     <h5 class="card-title">{{$post->title}}</h5>
-    <h6 class="card-subtitle mb-2 text-muted">{{$post->user_id}}</h6>
+    <h6 class="card-subtitle mb-2 text-muted">{{$post->user()->first()->username}}</h6>
     <p class="card-text">{{$post->content}}</p>
     @if(Auth::user())
     @if((Auth::user()->admin == 1) or (Auth::user()->id == $post->user_id))
-    <a href="{{ route('posts.delete', $post) }}" class="btn btn-danger btn-sm" role="button"><i class="bi bi-trash"></i>apagar</a>
+    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePost" style="float: right" href="#">
+      apagar
+    </button>
     @endif
     @endif
     <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addComment">
       comentar
     </button>
   </div>
+</div>
+{{-- modal delete post --}}
+<div class="modal" tabindex="-1" id="deletePost">
+  <form method="post" action="{{ route('posts.delete', $post) }}">
+    @csrf
+    @method('delete')
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">apagar postagem?</h5>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">cancelar</button>
+          <button type="submit" class="btn btn-danger">apagar</button>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>
 {{-- comentários --}}
 @if($comments)
@@ -54,10 +74,30 @@
     <p class="card-text">{{$comment->content}}</p>
     @if(Auth::user())
     @if((Auth::user()->admin == 1) or ($comment->user_id == Auth::user()->id))
-    <a href="{{ route('posts.delete', $post) }}" class="btn btn-danger btn-sm" role="button"><i class="bi bi-trash"></i>apagar</a>
+    <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteComment" style="float: right">
+      apagar
+    </button>
     @endif
     @endif
   </div>
+</div>
+{{-- modal delete comment --}}
+<div class="modal" tabindex="-1" id="deleteComment">
+  <form method="post" action="{{ route('comments.delete', $comment) }}">
+    @csrf
+    @method('delete')
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">apagar comentário?</h5>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">cancelar</button>
+          <button type="submit" class="btn btn-danger">apagar</button>
+        </div>
+      </div>
+    </div>
+  </form>
 </div>
 @endforeach
 @endif

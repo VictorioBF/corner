@@ -67,6 +67,6 @@ class PostsController extends Controller
 
         $post->delete();
 
-        return redirect()->route('posts');
+        return redirect()->route('posts.home');
     }
 }

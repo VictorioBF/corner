@@ -55,11 +55,6 @@
       <h6 class="card-subtitle mb-2 text-muted">{{$post->user()->first()->username}}</h6>
       <h6 class="card-subtitle mb-2 text-muted">{{$post->subject()->first()->name}}</h6>
       <p class="card-text">{{$post->content}}</p>
-      @if(Auth::user())
-      @if((Auth::user()->admin == 1) or (Auth::user()->id == $post->user_id))
-      <a href="{{ route('posts.delete', $post) }}" class="btn btn-danger btn-sm" role="button"><i class="bi bi-trash"></i>apagar</a>
-      @endif
-      @endif
     </div>
   </div>
 </a>

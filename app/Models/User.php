@@ -74,6 +74,7 @@ class User extends Authenticatable
         return 'remember_token';
     }
 
+    // pega os posts ded um autor
     public function posts()
     {
         return $this->hasMany(Post::class, foreignKey: "user_id", localKey: "id");

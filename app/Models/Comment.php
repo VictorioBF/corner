@@ -9,6 +9,7 @@ class Comment extends Model
 {
     use HasFactory;
     
+    // pega o autor de um comentário
     public function user()
     {
         // UM COMENTÁRIO PERTENCE A UM USER (AUTOR): 1:1
